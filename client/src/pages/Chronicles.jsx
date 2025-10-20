@@ -14,7 +14,7 @@ export default function Chronicles() {
   const [isPlaying, setIsPlaying] = useState(false); // 🎵 for toggle
 
   const USERNAME = "robert";
-  const socket = io("http://localhost:5000");
+  const socket = io("https://sharing-secrets-2.onrender.com/");
   const audioRef = useRef(null);
 
   // 🎧 Handle Audio on Mount
@@ -54,7 +54,7 @@ export default function Chronicles() {
 
   const fetchChronicles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/chronicles");
+      const res = await axios.get("https://sharing-secrets-2.onrender.com/chronicles");
       const structuredData = { events: [], promises: [], punishments: [] };
       res.data.forEach((item) => {
         if (item.type === "event") structuredData.events.push(item);
@@ -89,7 +89,7 @@ export default function Chronicles() {
       };
       if (activeTab === "events" && formData.date) payload.date = formData.date;
 
-      await axios.post("http://localhost:5000/chronicles", payload);
+      await axios.post("https://sharing-secrets-2.onrender.com/chronicles", payload);
       setFormData({ title: "", desc: "", date: "" });
       setShowForm(false);
       fetchChronicles();
@@ -101,7 +101,7 @@ export default function Chronicles() {
 
   const toggleStatus = async (id, currentStatus) => {
     try {
-      await axios.put(`http://localhost:5000/chronicles/${id}`, {
+      await axios.put(`https://sharing-secrets-2.onrender.com/chronicles/${id}`, {
         status: currentStatus === "done" ? "pending" : "done",
       });
       fetchChronicles();
@@ -112,7 +112,7 @@ export default function Chronicles() {
 
   const deleteChronicle = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/chronicles/${id}`);
+      await axios.delete(`https://sharing-secrets-2.onrender.com/chronicles/${id}`);
       fetchChronicles();
     } catch (err) {
       console.error("❌ Error deleting chronicle:", err);

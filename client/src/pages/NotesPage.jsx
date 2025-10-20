@@ -17,8 +17,8 @@ export default function NotesPage({ user }) {
   const [editText, setEditText] = useState("");
 
   const MAX_PREVIEW_LENGTH = 100;
-  const API_URL = "http://localhost:5000/api/notes";
-  const socket = io("http://localhost:5000");
+  const API_URL = "https://sharing-secrets-2.onrender.com/api/notes";
+  const socket = io("https://sharing-secrets-2.onrender.com/");
 
   // Fetch notes
   useEffect(() => {

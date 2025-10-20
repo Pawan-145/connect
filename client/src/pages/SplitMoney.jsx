@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaUser, FaUserFriends, FaTrash } from "react-icons/fa";
 import { USERS } from "../config/authConfig";
 
-const API_URL = "http://localhost:5000/api/expenses";
+const API_URL = "https://sharing-secrets-2.onrender.com/api/expenses";
 
 export default function CoupleSplit({ user }) {
   const [expenses, setExpenses] = useState([]);

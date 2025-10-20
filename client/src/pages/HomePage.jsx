@@ -46,7 +46,7 @@ export default function HomePage({ user, onLock }) {
             <div>
               <p className="text-sm text-zinc-900 font-sans">Welcome back</p>
               <h1 className="text-2xl font-semibold text-[#FF6FA3] leading-tight">
-                {user?.name ?? "My Love"} <span className="text-xl">💞</span>
+                {user?.username ?? "My Love"} <span className="text-xl">💞</span>
               </h1>
             </div>
             <div className="text-right">

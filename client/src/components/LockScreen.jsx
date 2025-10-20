@@ -22,7 +22,7 @@ export default function LockScreen({ onUnlock }) {
     <div className="flex items-center justify-center h-screen bg-[#FFF5E1] font-sans">
       <div className="w-80 p-6 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-white/30">
         <h2 className="text-2xl text-[#008080] font-bold text-center mb-6">
-          💞 Couple Lock Screen 💞
+          💞 Lock Screen 💞
         </h2>
 
         <input

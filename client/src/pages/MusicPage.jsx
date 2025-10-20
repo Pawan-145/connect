@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io("http://localhost:5000"); // Change to deployed server URL
+const socket = io("https://sharing-secrets-2.onrender.com/"); // Change to deployed server URL
 
 export default function MusicPage({ user }) {
   const [songs, setSongs] = useState([]);
@@ -55,7 +55,7 @@ export default function MusicPage({ user }) {
 
   const fetchNotes = async () => {
     try {
-      const notesRes = await axios.get("http://localhost:5000/musicnotes");
+      const notesRes = await axios.get("https://sharing-secrets-2.onrender.com/musicnotes");
       const mergedSongs = hardcodedSongs.map((song) => {
         const note = notesRes.data.find((n) => n.title === song.title);
         return {
@@ -142,10 +142,10 @@ export default function MusicPage({ user }) {
       const payload = { title: selectedSong.title, note: noteText, noteBy: username };
       let updatedSong;
       if (selectedSong._id) {
-        const res = await axios.put(`http://localhost:5000/musicnotes/${selectedSong._id}`, payload);
+        const res = await axios.put(`https://sharing-secrets-2.onrender.com/musicnotes/${selectedSong._id}`, payload);
         updatedSong = res.data;
       } else {
-        const res = await axios.post(`http://localhost:5000/musicnotes`, payload);
+        const res = await axios.post(`https://sharing-secrets-2.onrender.com/musicnotes`, payload);
         updatedSong = res.data;
       }
       setSongs((prev) =>
@@ -163,7 +163,7 @@ export default function MusicPage({ user }) {
       return setShowNoteModal(false);
     }
     try {
-      await axios.put(`http://localhost:5000/musicnotes/${selectedSong._id}`, { note: "", noteBy: "" });
+      await axios.put(`https://sharing-secrets-2.onrender.com/musicnotes/${selectedSong._id}`, { note: "", noteBy: "" });
       setSongs((prev) =>
         prev.map((s) => (s.title === selectedSong.title ? { ...s, note: "", noteBy: "" } : s))
       );
@@ -181,7 +181,7 @@ export default function MusicPage({ user }) {
       }
       let updatedSong;
       if (!song._id) {
-        const res = await axios.post(`http://localhost:5000/musicnotes`, {
+        const res = await axios.post(`https://sharing-secrets-2.onrender.com/musicnotes`, {
           title: song.title,
           pinned: true,
           pinnedBy: username,
@@ -191,7 +191,7 @@ export default function MusicPage({ user }) {
         });
         updatedSong = res.data;
       } else {
-        const res = await axios.put(`http://localhost:5000/musicnotes/${song._id}`, {
+        const res = await axios.put(`https://sharing-secrets-2.onrender.com/musicnotes/${song._id}`, {
           pinned: !song.pinned,
           pinnedBy: !song.pinned ? username : "",
         });

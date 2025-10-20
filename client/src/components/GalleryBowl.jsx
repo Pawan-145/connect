@@ -24,7 +24,7 @@ const GalleryBowl = () => {
   // 🔹 Fetch images
   const fetchImages = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/images");
+      const res = await axios.get("https://sharing-secrets-2.onrender.com/images");
       const urls = res.data.map(img => ({ url: img.secure_url, public_id: img.public_id }));
       setIMAGES(urls);
       setPool(urls.map(i => i.url));
@@ -124,7 +124,7 @@ const GalleryBowl = () => {
 
     try {
       setUploading(true);
-      await axios.post("http://localhost:5000/upload", formData);
+      await axios.post("https://sharing-secrets-2.onrender.com/upload", formData);
       await fetchImages();
     } catch (err) {
       console.error("Upload failed:", err);
@@ -146,7 +146,7 @@ async function handleDeleteSelected() {
   try {
     await Promise.all(
       selectedIds.map(id =>
-        axios.delete(`http://localhost:5000/delete/${encodeURIComponent(id)}`)
+        axios.delete(`https://sharing-secrets-2.onrender.com/delete/${encodeURIComponent(id)}`)
       )
     );
     setSelectedToDelete(new Set());

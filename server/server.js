@@ -344,6 +344,7 @@ io.on("connection", (socket) => {
     } catch (err) {
       console.error("❌ Error during socket mood save:", err.message);
     }
+    
   });
 
   socket.on("add-note", async ({ username, text }) => {

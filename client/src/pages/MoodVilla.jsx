@@ -28,7 +28,7 @@ const moodsList = [
   { emoji: "🙏", label: "Grateful", gif: "/gifs/grateful.gif" },
 ];
 
-const socket = io("http://localhost:5000");
+const socket = io("https://sharing-secrets-2.onrender.com/");
 
 export default function MoodVilla({ user, onBack }) {
   const [myMood, setMyMood] = useState(null);
@@ -74,7 +74,7 @@ export default function MoodVilla({ user, onBack }) {
 console.log("💌 Sending mood data:", payload);
 
 try {
-  const res = await axios.post("http://localhost:5000/moods", payload, {
+  const res = await axios.post("https://sharing-secrets-2.onrender.com/moods", payload, {
     headers: { "Content-Type": "application/json" },
   });
   console.log("✅ Mood saved:", res.data);
