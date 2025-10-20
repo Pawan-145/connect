@@ -5,6 +5,7 @@ import { FaHeart } from "react-icons/fa";
 import ThoughtofDay from "../components/ThoughtofDay"
 import WidgetsGrid from "../components/WidgetsGrid";
 import RelationshipBar from "../components/RelationshipBar";
+import ProfileFrame from "../components/ProfileFrame";
 
 const RELATIONSHIP_START = "2025-04-21T00:00:00.000Z";
 
@@ -80,9 +81,13 @@ export default function HomePage({ user, onLock }) {
         <RelationshipBar you={state.you} partner={state.partner} />
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <WidgetsGrid pinned={pinned} />
-      </div>
+      </div> */}
+      
+<div className="mt-4">
+  <ProfileFrame user={user} pinned={pinned} loveDays={loveDays} />
+</div>
     </div>
   );
 }

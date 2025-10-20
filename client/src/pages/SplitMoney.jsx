@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaUser, FaUserFriends, FaTrash } from "react-icons/fa";
-import { USERS } from "../config/authConfig";
 
 const API_URL = "https://sharing-secrets-2.onrender.com/api/expenses";
 
@@ -17,7 +16,7 @@ export default function CoupleSplit({ user }) {
   const listRef = useRef(null);
 
   // Identify the partner
-  const partner = USERS.find((u) => u.username !== user.username);
+  const partner = user.username === "Rudraksh" ? { username: "Nishtha" } : { username: "Rudraksh" };
 
   // Fetch expenses from backend
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function CoupleSplit({ user }) {
       try {
         const res = await axios.get(API_URL);
         const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setExpenses(sorted);
+        setExpenses(sorted);
       } catch (err) {
         console.error("❌ Failed to fetch expenses:", err);
       }
@@ -38,7 +37,6 @@ export default function CoupleSplit({ user }) {
     if (!title || !amount) return;
 
     try {
-      // paidBy is actual username
       const newExpense = {
         title,
         amount: parseFloat(amount),
@@ -65,11 +63,20 @@ export default function CoupleSplit({ user }) {
     }
   };
 
-  // Calculate net balance relative to logged-in user
-  const netBalance = expenses.reduce((acc, e) => {
-    if (e.paidBy === user.username) return acc + e.amount / 2; // user paid → partner owes
-    return acc - e.amount / 2; // partner paid → user owes
-  }, 0);
+  // ✅ Correct net balance calculation (symmetric, independent of who logs in)
+  const totalPaidByUser = expenses
+    .filter((e) => e.paidBy === user.username)
+    .reduce((acc, e) => acc + e.amount, 0);
+
+  const totalPaidByPartner = expenses
+    .filter((e) => e.paidBy === partner.username)
+    .reduce((acc, e) => acc + e.amount, 0);
+
+  const totalExpenses = totalPaidByUser + totalPaidByPartner;
+  const shouldPayEach = totalExpenses / 2;
+
+  // Positive → partner owes user, Negative → user owes partner
+  const netBalance = totalPaidByUser - shouldPayEach;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-teal-50 px-4 sm:px-6 py-6 flex flex-col items-center relative">
@@ -79,7 +86,6 @@ export default function CoupleSplit({ user }) {
 
       {/* Net Balance Dashboard */}
       <div className="relative w-40 h-40 flex items-center justify-center mb-6">
-        {/* Add button */}
         <motion.button
           onClick={() => setShowModal(true)}
           whileHover={{ scale: 1.1 }}
@@ -89,7 +95,6 @@ export default function CoupleSplit({ user }) {
           <FaPlus className="text-2xl" />
         </motion.button>
 
-        {/* Delete button */}
         <motion.button
           onClick={() => setDeleteMode(!deleteMode)}
           whileHover={{ scale: 1.1 }}
@@ -101,7 +106,6 @@ export default function CoupleSplit({ user }) {
           <FaTrash className="text-2xl" />
         </motion.button>
 
-        {/* Net balance circle */}
         <motion.div
           className="w-40 h-40 relative flex flex-col items-center justify-center rounded-full shadow-lg"
           animate={{ scale: [1, 1.05, 1] }}
@@ -138,6 +142,7 @@ export default function CoupleSplit({ user }) {
               cy="80"
             />
           </svg>
+
           <div className="absolute flex flex-col items-center justify-center text-center px-2">
             {expenses.length === 0 ? (
               <span className="text-zinc-900 text-sm">No expenses 💸</span>

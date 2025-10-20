@@ -204,7 +204,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import MoodVilla from "./MoodVilla";
-import { USERS } from "../config/authConfig";
+// import { USERS } from "../config/authConfig";
 import { io } from "socket.io-client";
 
 const API_BASE = "https://sharing-secrets-2.onrender.com";
@@ -241,7 +241,11 @@ export default function Mood({ user }) {
   const [partnerMood, setPartnerMood] = useState(null);
   const [showMoodVilla, setShowMoodVilla] = useState(false);
 
-  const partner = USERS.find((u) => u.username !== user.username);
+  // const partner = USERS.find((u) => u.username !== user.username);
+  const partner = {
+  username: user.username === "Rudraksh" ? "Nishtha" : "Rudraksh"
+};
+
 
   // ✅ Safe fetch that handles any API format
   const fetchMoods = async () => {

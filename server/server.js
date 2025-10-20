@@ -13,6 +13,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+
 dotenv.config();
 
 // ===========================================
@@ -26,6 +27,36 @@ app.use(cors());
 app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
+//Login Credentials
+// Example backend users (replace with real DB later if needed)
+const USERS = [
+  { username: process.env.USER1_NAME, password: process.env.USER1_PASS },
+  { username: process.env.USER2_NAME, password: process.env.USER2_PASS },
+];
+
+// Login endpoint
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  const user = USERS.find(
+    (u) => u.username.toLowerCase() === username.toLowerCase()
+  );
+
+  if (!user) return res.status(401).json({ error: "Access Denied ❌" });
+  if (user.password !== password)
+    return res.status(401).json({ error: "Wrong Password 😢" });
+
+  // Success
+  res.json({ username: user.username });
+});
+
+
+
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// Serve static uploads folder
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // ===========================================
 // ☁️ CLOUDINARY CONFIG
 // ===========================================
@@ -72,6 +103,8 @@ app.get("/images", async (req, res) => {
   }
 });
 
+
+
 app.delete("/delete/:public_id", async (req, res) => {
   try {
     await cloudinary.uploader.destroy(req.params.public_id, { invalidate: true });
@@ -80,6 +113,115 @@ app.delete("/delete/:public_id", async (req, res) => {
     res.status(500).json({ error: "Delete failed" });
   }
 });
+
+// const DP_DIR = path.join(process.cwd(), "uploads/dp");
+
+// // Ensure DP folder exists
+// if (!fs.existsSync(DP_DIR)) fs.mkdirSync(DP_DIR, { recursive: true });
+
+// // -------------------
+// // UPLOAD DP
+// // -------------------
+// app.post("/upload-dp", async (req, res) => {
+//   try {
+//     const file = req.files?.image;
+//     const { username } = req.body;
+//     if (!file || !username) return res.status(400).send("Missing file or username");
+
+//     // Validate file type
+//     if (!["image/jpeg", "image/png", "image/jpg"].includes(file.mimetype))
+//       return res.status(400).send("Invalid file type");
+
+//     const savePath = path.join(DP_DIR, username + path.extname(file.name));
+
+//     // Overwrite DP
+//     await file.mv(savePath);
+
+//     res.json({ url: `/dp/${username}${path.extname(file.name)}` });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Upload failed");
+//   }
+// });
+
+// // -------------------
+// // GET DP
+// // -------------------
+// // Fetch DP by username
+// app.get("/dp/:username", (req, res) => {
+//   try {
+//     const files = fs.readdirSync(DP_DIR);
+//     const file = files.find(f => f.startsWith(req.params.username));
+//     if (!file) return res.json({ url: null });
+
+//     // Return frontend-usable URL
+//     res.json({ url: `/dp/${file}` });
+//   } catch (err) {
+//     console.error("❌ Get DP error:", err);
+//     res.status(500).json({ url: null });
+//   }
+// });
+
+// // -------------------
+// // SERVE DP FOLDER SECURELY
+// // -------------------
+// app.use("/dp", express.static(DP_DIR));
+
+//Display Picture
+
+const DPSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  image: { type: Buffer, required: true },
+  contentType: { type: String, required: true },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+const DP = mongoose.model("DP", DPSchema);
+
+// -------------------
+// UPLOAD DP
+// -------------------
+app.post("/upload-dp", async (req, res) => {
+  try {
+    const file = req.files?.image;
+    const { username } = req.body;
+
+    if (!file || !username) return res.status(400).send("Missing file or username");
+
+    // Read file buffer
+    const imgData = fs.readFileSync(file.tempFilePath);
+
+    // Upsert (overwrite) DP
+    await DP.findOneAndUpdate(
+      { username },
+      { image: imgData, contentType: file.mimetype, updatedAt: new Date() },
+      { upsert: true, new: true }
+    );
+
+    res.json({ message: "DP uploaded successfully" });
+  } catch (err) {
+    console.error("Upload DP error:", err);
+    res.status(500).send("Upload failed");
+  }
+});
+
+// -------------------
+// GET DP
+// -------------------
+app.get("/dp/:username", async (req, res) => {
+  try {
+    const dp = await DP.findOne({ username: req.params.username });
+    if (!dp) return res.json({ url: null });
+
+    // Convert to base64 for frontend
+    const base64 = `data:${dp.contentType};base64,${dp.image.toString("base64")}`;
+    res.json({ url: base64 });
+  } catch (err) {
+    console.error("Fetch DP error:", err);
+    res.status(500).json({ url: null });
+  }
+});
+
 
 // ===========================================
 // 💞 MOODS
@@ -312,6 +454,7 @@ app.delete("/musicnotes/:id", async (req, res) => {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/songs", express.static(path.join(__dirname, "../client/public/songs")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // List all songs
 app.get("/api/songs", (req, res) => {
