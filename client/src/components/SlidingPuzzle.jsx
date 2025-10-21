@@ -61,7 +61,9 @@ export default function SlidingPuzzle() {
   const isSolved = (arr) => arr.every((val, i) => val === i);
 
   return (
-    <div className="bg-white/70 rounded-xl p-3 border border-white/20 shadow-md flex flex-col items-center w-100">
+    // <div className="bg-white/70 rounded-xl p-3 border border-white/20 shadow-md flex flex-col items-center w-100">
+      <div className="bg-white/70 rounded-xl p-3 border border-white/20 shadow-md flex flex-col justify-center items-center w-full max-w-sm mx-auto">
+
       <p className="text-xs text-zinc-900 mb-2 font-sans">Solve the Love Puzzle 💕</p>
 
       {/* 🧩 Puzzle Grid */}
