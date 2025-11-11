@@ -13,6 +13,7 @@ node_modules
 *.local
 tmp
 uploads
+.env
 
 # Editor directories and files
 .vscode/*

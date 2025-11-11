@@ -62,6 +62,15 @@ app.post("/login", (req, res) => {
 });
 
 
+app.get("/health", (req, res) => {
+  const secret = req.query.key;
+  if (secret !== process.env.HEALTH_KEY) {
+    return res.status(403).send("Forbidden");
+  }
+  res.status(200).send("OK");
+});
+
+
 
 
 // const __filename = fileURLToPath(import.meta.url);
