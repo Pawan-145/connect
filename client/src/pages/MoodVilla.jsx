@@ -109,38 +109,40 @@ try {
             ))}
           </div>
 
-          {!reasonVisible ? (
-            <button
-              onClick={() => setReasonVisible(true)}
-              className="px-4 py-2 mb-4 text-sm font-semibold text-white bg-pink-400 hover:bg-pink-500 rounded-full shadow-md"
-            >
-              ➕ Add a Reason
-            </button>
-          ) : (
-            <div className="flex flex-col items-center mb-4">
-              <textarea
-                placeholder="Write your reason here..."
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="w-80 p-3 rounded-lg shadow bg-white text-gray-700 mb-2 border border-teal-200 focus:ring-2 focus:ring-teal-400"
-              />
-              <button
-                onClick={() => setReasonVisible(false)}
-                className="px-4 py-2 text-sm font-semibold text-white bg-pink-400 hover:bg-pink-500 rounded-full shadow-md"
-              >
-                ✖ Hide reason
-              </button>
-            </div>
-          )}
+         <div className="flex flex-col items-center mb-4">
+  {reasonVisible ? (
+    <>
+      <textarea
+        placeholder="Write your reason here..."
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        className="w-80 p-3 rounded-lg shadow bg-white text-gray-700 mb-3 border border-teal-200 focus:ring-2 focus:ring-teal-400"
+      />
+      <button
+        onClick={() => setReasonVisible(false)}
+        className="px-4 py-2 mb-3 text-sm font-semibold text-white bg-pink-400 hover:bg-pink-500 rounded-full shadow-md"
+      >
+        ✖ Hide Reason
+      </button>
+    </>
+  ) : (
+    <button
+      onClick={() => setReasonVisible(true)}
+      className="px-4 py-2 mb-3 text-sm font-semibold text-white bg-pink-400 hover:bg-pink-500 rounded-full shadow-md"
+    >
+      ➕ Add a Reason
+    </button>
+  )}
 
-          <button
-            onClick={handleSave}
-            className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all active:scale-95"
-          >
-            Save Mood 💌
-          </button>
-        </>
-      )}
+  <button
+    onClick={handleSave}
+    className="bg-teal-500 hover:bg-teal-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all active:scale-95"
+  >
+    Save Mood 💌
+  </button>
+</div>
+</>
+)};
 
       {saved && <div className="mt-6 text-green-600 font-semibold">Mood Saved! 🌸</div>}
 

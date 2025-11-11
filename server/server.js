@@ -29,11 +29,22 @@ app.use(fileUpload({ useTempFiles: true }));
 
 //Login Credentials
 // Example backend users (replace with real DB later if needed)
+// const USERS = [
+//   { username: process.env.USER1_NAME, password: process.env.USER1_PASS },
+//   { username: process.env.USER2_NAME, password: process.env.USER2_PASS },
+// ];
 const USERS = [
-  { username: process.env.USER1_NAME, password: process.env.USER1_PASS },
-  { username: process.env.USER2_NAME, password: process.env.USER2_PASS },
+  {
+    username: process.env.USER1_NAME,
+    password: process.env.USER1_PASS,
+    partner: process.env.USER2_NAME, // partner of user1
+  },
+  {
+    username: process.env.USER2_NAME,
+    password: process.env.USER2_PASS,
+    partner: process.env.USER1_NAME, // partner of user2
+  },
 ];
-
 // Login endpoint
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -46,7 +57,8 @@ app.post("/login", (req, res) => {
     return res.status(401).json({ error: "Wrong Password 😢" });
 
   // Success
-  res.json({ username: user.username });
+  // res.json({ username: user.username });
+   res.json({ username: user.username, partner: user.partner });
 });
 
 
@@ -74,7 +86,55 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ===========================================
+
+// User Schema
+// const userSchema = new mongoose.Schema({
+//   username: String,
+//   partner: String,
+//   mood: String,
+// });
+
+// const User = mongoose.model("User", userSchema);
+
+// // Get moods for current user
+// app.get("/moods/:username", async (req, res) => {
+//   const username = req.params.username;
+//   try {
+//     const me = await User.findOne({ username });
+//     const partner = await User.findOne({ username: me.partner });
+//     res.json({
+//       me: { username: me.username, mood: me.mood },
+//       partner: { username: partner.username, mood: partner.mood },
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+// app.post("/register", async (req, res) => {
+//   const { username, partner, mood } = req.body;
+//   try {
+//     const newUser = new User({ username, partner, mood: mood || "Calm" });
+//     await newUser.save();
+//     res.json({ message: "User created", user: newUser });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+// app.put("/mood/:username", async (req, res) => {
+//   const { mood } = req.body;
+//   try {
+//     const user = await User.findOneAndUpdate(
+//       { username: req.params.username },
+//       { mood },
+//       { new: true }
+//     );
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+  // ===========================================
 // 🖼 GALLERY ROUTES
 // ===========================================
 app.post("/upload", async (req, res) => {

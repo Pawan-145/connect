@@ -13,7 +13,7 @@ export default function Chronicles() {
   const [formData, setFormData] = useState({ title: "", desc: "", date: "" });
   const [isPlaying, setIsPlaying] = useState(false); // 🎵 for toggle
 
-  const USERNAME = "robert";
+  const USERNAME = "Rudraksh";
   const socket = io("https://sharing-secrets-2.onrender.com/");
   const audioRef = useRef(null);
 

@@ -83,7 +83,7 @@ export default function LockScreen({ onUnlock }) {
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-cover bg-center" style={{backgroundImage: "url('images/bg.jpg')"}}>
       <div className="w-80 mt-24 p-6 rounded-2xl shadow-2xl bg-white/10 backdrop-blur-md border border-white/30">
-        <h2 className="text-2xl text-[#008080] font-bold text-center mb-6">💞 Lock Screen 💞</h2>
+        <h2 className="text-2xl text-[#008080] font-bold text-center mb-6">💞 Lock Screen [Testing prototype] 💞</h2>
         <input
           type="text"
           placeholder="Username"
